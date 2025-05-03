@@ -16,12 +16,6 @@ const Blog = () => {
   const [posts, setPosts] = useState<BlogPost[]>(blogPosts);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [activeTag, setActiveTag] = useState<string | null>(null);
-  
-  // Extract unique tags from all blog posts
-  const allTags = Array.from(new Set(
-    blogPosts.flatMap(post => post.tags || [])
-  )).sort();
   
   // Function to initialize scroll animations
   useEffect(() => {
@@ -51,29 +45,23 @@ const Blog = () => {
   // Handle filter changes from URL params
   useEffect(() => {
     const category = searchParams.get('category');
-    const tag = searchParams.get('tag');
     const query = searchParams.get('search');
     
     if (category) setActiveCategory(category);
-    if (tag) setActiveTag(tag);
+    else setActiveCategory(null);
+    
     if (query) setSearchQuery(query);
     
-    filterPosts(category, tag, query);
+    filterPosts(category, query);
   }, [searchParams]);
   
-  // Filter posts based on category, tag, and search query
-  const filterPosts = (category: string | null, tag: string | null, query: string | null) => {
+  // Filter posts based on category and search query
+  const filterPosts = (category: string | null, query: string | null) => {
     let filteredPosts = [...blogPosts];
     
     if (category) {
       filteredPosts = filteredPosts.filter(post => 
         post.category.toLowerCase() === category.toLowerCase()
-      );
-    }
-    
-    if (tag) {
-      filteredPosts = filteredPosts.filter(post => 
-        post.tags?.some(t => t.toLowerCase() === tag.toLowerCase())
       );
     }
     
@@ -96,7 +84,6 @@ const Blog = () => {
     
     if (searchQuery) params.set('search', searchQuery);
     if (activeCategory) params.set('category', activeCategory);
-    if (activeTag) params.set('tag', activeTag);
     
     setSearchParams(params);
   };
@@ -113,25 +100,6 @@ const Blog = () => {
       params.set('category', category.toLowerCase());
     }
     
-    if (activeTag) params.set('tag', activeTag);
-    if (searchQuery) params.set('search', searchQuery);
-    
-    setSearchParams(params);
-  };
-  
-  // Handle tag click
-  const handleTagClick = (tag: string) => {
-    const params = new URLSearchParams();
-    
-    if (activeTag === tag.toLowerCase()) {
-      // If clicking on already active tag, remove the filter
-      setActiveTag(null);
-    } else {
-      setActiveTag(tag.toLowerCase());
-      params.set('tag', tag.toLowerCase());
-    }
-    
-    if (activeCategory) params.set('category', activeCategory);
     if (searchQuery) params.set('search', searchQuery);
     
     setSearchParams(params);
@@ -142,7 +110,6 @@ const Blog = () => {
     setSearchParams({});
     setSearchQuery('');
     setActiveCategory(null);
-    setActiveTag(null);
     setPosts(blogPosts);
   };
 
@@ -163,7 +130,7 @@ const Blog = () => {
         
         {/* Search and Filters */}
         <section className="container mx-auto px-6 py-8">
-          <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="bg-card rounded-xl shadow-md p-6">
             <form onSubmit={handleSearch} className="flex gap-2 mb-6">
               <Input
                 type="text"
@@ -196,27 +163,7 @@ const Blog = () => {
               </div>
             </div>
             
-            <div className="mb-4">
-              <h3 className="text-lg font-medium font-poppins mb-3">Popular Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {allTags.map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="outline"
-                    className={`cursor-pointer px-3 py-1 ${
-                      activeTag === tag.toLowerCase()
-                        ? 'bg-lavender text-white hover:bg-lavender/80'
-                        : 'hover:bg-lightgray/80'
-                    }`}
-                    onClick={() => handleTagClick(tag)}
-                  >
-                    #{tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            
-            {(activeCategory || activeTag || searchQuery) && (
+            {(activeCategory || searchQuery) && (
               <div className="flex justify-between items-center mt-4 pt-4 border-t border-lightgray">
                 <p className="text-sm text-darkgray/70">
                   {posts.length} {posts.length === 1 ? 'result' : 'results'} found

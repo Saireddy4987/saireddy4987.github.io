@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '@/hooks/use-theme';
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,10 +24,14 @@ const Navbar: React.FC = () => {
     };
   }, []);
 
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-300 py-4 px-6 md:px-10 ${
-        scrolled ? 'bg-white/90 backdrop-blur shadow-md py-3' : 'bg-transparent'
+        scrolled ? 'bg-background/90 backdrop-blur shadow-md py-3' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto flex justify-between items-center">
@@ -54,28 +58,20 @@ const Navbar: React.FC = () => {
           <Link to="/" className={`nav-link ${location.pathname === '/' ? 'text-blue' : ''}`}>Home</Link>
           <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'text-blue' : ''}`}>About</Link>
           <Link to="/blog" className={`nav-link ${location.pathname === '/blog' ? 'text-blue' : ''}`}>Blog</Link>
-          <Link to="/contact" className={`nav-link ${location.pathname === '/contact' ? 'text-blue' : ''}`}>Contact</Link>
         </div>
 
         <div className="flex items-center space-x-4">
-          <div className={`relative transition-all duration-300 ${searchOpen ? 'w-64' : 'w-10'}`}>
-            {searchOpen && (
-              <Input 
-                placeholder="Search..." 
-                className="pr-10 rounded-full"
-                autoFocus
-                onBlur={() => setSearchOpen(false)}
-              />
+          <button
+            onClick={toggleTheme}
+            className="hover:text-blue transition-colors duration-300"
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-5 h-5" />
+            ) : (
+              <Moon className="w-5 h-5" />
             )}
-            <button 
-              onClick={() => setSearchOpen(!searchOpen)}
-              className={`${searchOpen ? 'absolute right-2 top-1/2 -translate-y-1/2' : ''} 
-              hover:text-blue transition-colors duration-300`}
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-          </div>
+          </button>
 
           <div className="md:hidden">
             <button className="p-2" aria-label="Menu">

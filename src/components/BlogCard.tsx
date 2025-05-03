@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
+import { Clock } from 'lucide-react';
 
 export interface BlogPost {
   id: string;
@@ -16,6 +17,7 @@ export interface BlogPost {
     name: string;
     avatar: string;
   };
+  readTime?: number;
 }
 
 interface BlogCardProps {
@@ -24,6 +26,9 @@ interface BlogCardProps {
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
+  // Calculate read time if not provided
+  const readTime = post.readTime || Math.max(1, Math.ceil((post.content?.length || post.excerpt.length) / 1000));
+  
   return (
     <div className={`card group overflow-hidden ${featured ? 'md:flex' : ''} h-full animate-fade-in`}>
       <div className={`overflow-hidden ${featured ? 'md:w-1/2' : ''}`}>
@@ -68,12 +73,16 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
             />
             <span className="text-sm font-medium">{post.author.name}</span>
           </div>
-          <Link 
-            to={`/blog/${post.id}`}
-            className="text-blue hover:text-coral font-medium transition-colors duration-300 text-sm"
-          >
-            Read More →
-          </Link>
+          <div className="flex items-center space-x-2">
+            <Clock className="w-4 h-4 text-blue" />
+            <span className="text-sm text-darkgray/70">{readTime} min read</span>
+            <Link 
+              to={`/blog/${post.id}`}
+              className="text-blue hover:text-coral font-medium transition-colors duration-300 text-sm ml-2"
+            >
+              Read More →
+            </Link>
+          </div>
         </div>
       </div>
     </div>

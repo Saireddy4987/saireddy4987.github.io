@@ -1,6 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,43 +6,47 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 212 80% 59%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 40 100% 55%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 348 100% 69%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 1rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.75rem;
+  }
+ 
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
   }
 }
 
@@ -52,69 +54,95 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-softwhite text-darkgray font-opensans;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-poppins font-bold;
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-@layer components {
-  .btn-primary {
-    @apply bg-blue text-white font-poppins font-semibold px-6 py-3 rounded-lg hover:scale-105 
-    transition-transform duration-300 shadow-md hover:shadow-lg;
-  }
+/* Custom colors */
+:root {
+  --blue: #4A90E2;
+  --coral: #FF6F61;
+  --mint: #A8E6CF;
+  --lavender: #D4A5E2;
+  --yellow: #F5A623;
+  --darkgray: #333333;
+  --lightgray: #EAEAEA;
+}
 
-  .btn-secondary {
-    @apply bg-yellow text-darkgray font-poppins font-semibold px-6 py-3 rounded-lg hover:scale-105 
-    transition-transform duration-300 shadow-md hover:shadow-lg;
-  }
+/* Animation classes */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
 
-  .btn-accent {
-    @apply bg-coral text-white font-poppins font-semibold px-6 py-3 rounded-lg hover:scale-105 
-    transition-transform duration-300 shadow-md hover:shadow-lg;
-  }
+.scroll-reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-  .card {
-    @apply bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-
-  .card-hover {
-    @apply hover:scale-[1.02] transition-transform duration-300;
-  }
-
-  .blog-card-image {
-    @apply w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105;
-  }
-
-  .nav-link {
-    @apply font-poppins text-darkgray hover:text-blue transition-colors duration-300
-    relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 
-    after:bottom-0 after:left-0 after:bg-blue after:origin-bottom-right 
-    after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
-  }
-
-  .category-box {
-    @apply rounded-lg py-2 px-4 text-center font-poppins font-medium transition-all 
-    duration-300 hover:scale-105 hover:shadow-md cursor-pointer;
-  }
-
-  .scroll-reveal {
-    @apply opacity-0;
-  }
-
-  .scroll-reveal.active {
-    @apply animate-fade-in;
-  }
-
-  .gradient-text {
-    @apply bg-gradient-to-r from-blue to-coral text-transparent bg-clip-text;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Blog Card Styles */
+.card {
+  @apply bg-card border border-border rounded-xl shadow-sm transition-all duration-300 hover:shadow-md;
+}
+
+.blog-card-image {
+  @apply w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105;
+}
+
+/* CategoryBox styles */
+.category-box {
+  @apply p-4 rounded-xl transition-transform duration-300 hover:scale-105 shadow-sm hover:shadow-md;
+}
+
+.bg-blue {
+  @apply bg-blue text-white;
+}
+
+.bg-coral {
+  @apply bg-coral text-white;
+}
+
+.bg-mint {
+  @apply bg-mint text-darkgray;
+}
+
+.bg-lavender {
+  @apply bg-lavender text-white;
+}
+
+.bg-yellow {
+  @apply bg-yellow text-darkgray;
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-blue text-white hover:bg-blue/90;
+}
+
+/* Navigation links */
+.nav-link {
+  @apply font-medium transition-colors duration-300 hover:text-blue;
+}
+
+/* Parallax effect */
 .parallax {
   position: relative;
   overflow: hidden;
@@ -125,10 +153,6 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 130%;
-  background-size: cover;
-  background-position: center;
-  will-change: transform;
-  transition: transform 0.05s linear;
+  height: 120%;
   z-index: -1;
 }

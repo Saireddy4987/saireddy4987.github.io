@@ -4,9 +4,10 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BlogCard, { BlogPost } from '@/components/BlogCard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Share, Bookmark, Facebook, Twitter } from 'lucide-react';
+import { Share, Bookmark, Facebook, Twitter, Book, Clock } from 'lucide-react';
 import { blogPosts } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
 
@@ -23,14 +24,11 @@ const BlogPostPage = () => {
     if (currentPost) {
       setPost(currentPost);
       
-      // Find related posts (same category or shared tags)
+      // Find related posts (same category)
       const related = blogPosts
         .filter(p => p.id !== id) // Exclude current post
-        .filter(p => 
-          p.category === currentPost.category || 
-          p.tags?.some(tag => currentPost.tags?.includes(tag))
-        )
-        .slice(0, 2); // Get up to 2 related posts
+        .filter(p => p.category === currentPost.category)
+        .slice(0, 3); // Get up to 3 related posts
       
       setRelatedPosts(related);
     }
@@ -75,6 +73,9 @@ const BlogPostPage = () => {
       duration: 3000,
     });
   };
+  
+  // Calculate read time
+  const readTime = post?.readTime || Math.max(1, Math.ceil((post?.content?.length || 0) / 1000));
   
   if (!post) {
     return (
@@ -128,6 +129,10 @@ const BlogPostPage = () => {
                   className="w-10 h-10 rounded-full object-cover mr-2 border-2 border-white/50" 
                 />
                 <span>By {post.author.name} • {post.date}</span>
+                <div className="flex items-center mx-4">
+                  <Clock className="w-4 h-4 mr-1 text-white/70" />
+                  <span>{readTime} min read</span>
+                </div>
               </div>
             </div>
           </div>
@@ -175,19 +180,6 @@ const BlogPostPage = () => {
                 <div dangerouslySetInnerHTML={{ __html: post.content || post.excerpt }} />
               </div>
               
-              {/* Tags */}
-              <div className="mt-12 pt-6 border-t border-lightgray">
-                <div className="flex flex-wrap gap-2">
-                  {post.tags?.map(tag => (
-                    <Link key={tag} to={`/blog?tag=${tag}`}>
-                      <Badge variant="outline" className="hover:bg-lightgray/50">
-                        #{tag}
-                      </Badge>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              
               {/* Author Bio */}
               <div className="mt-12 bg-lightgray/30 rounded-xl p-6 flex flex-col sm:flex-row gap-6 items-center sm:items-start">
                 <img 
@@ -218,32 +210,49 @@ const BlogPostPage = () => {
             <aside className="lg:w-1/4">
               <div className="sticky top-24">
                 {/* Related Posts */}
-                <div className="mb-8">
-                  <h3 className="text-xl font-semibold font-poppins mb-4">Related Posts</h3>
-                  <div className="space-y-6">
-                    {relatedPosts.map(relatedPost => (
-                      <div key={relatedPost.id} className="scroll-reveal">
-                        <Link to={`/blog/${relatedPost.id}`} className="group block">
-                          <div className="aspect-video overflow-hidden rounded-lg mb-2">
-                            <img 
-                              src={relatedPost.image} 
-                              alt={relatedPost.title} 
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-                            />
+                <Card className="mb-8">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center text-xl">
+                      <Book className="w-5 h-5 mr-2 text-blue" />
+                      Related Articles
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {relatedPosts.length > 0 ? (
+                      <div className="space-y-6">
+                        {relatedPosts.map(relatedPost => (
+                          <div key={relatedPost.id} className="scroll-reveal">
+                            <Link to={`/blog/${relatedPost.id}`} className="group block">
+                              <div className="aspect-video overflow-hidden rounded-lg mb-2">
+                                <img 
+                                  src={relatedPost.image} 
+                                  alt={relatedPost.title} 
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                                />
+                              </div>
+                              <h4 className="font-medium group-hover:text-blue transition-colors duration-300">
+                                {relatedPost.title}
+                              </h4>
+                              <div className="flex items-center mt-2 text-sm text-darkgray/70">
+                                <Clock className="w-3 h-3 mr-1" />
+                                <span>{Math.max(1, Math.ceil((relatedPost.content?.length || 0) / 1000))} min read</span>
+                              </div>
+                            </Link>
                           </div>
-                          <h4 className="font-medium group-hover:text-blue transition-colors duration-300">
-                            {relatedPost.title}
-                          </h4>
-                        </Link>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
+                    ) : (
+                      <p className="text-sm text-darkgray/70">No related articles found</p>
+                    )}
+                  </CardContent>
+                </Card>
                 
                 {/* Categories */}
-                <div className="mb-8">
-                  <h3 className="text-xl font-semibold font-poppins mb-4">Categories</h3>
-                  <div className="space-y-2">
+                <Card className="mb-8">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-xl">Categories</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
                     <Link to="/blog?category=productivity" className="block py-2 px-4 hover:bg-lightgray rounded-lg transition-colors duration-200">
                       Productivity Tips
                     </Link>
@@ -259,8 +268,8 @@ const BlogPostPage = () => {
                     <Link to="/blog?category=mental-health" className="block py-2 px-4 hover:bg-lightgray rounded-lg transition-colors duration-200">
                       Mental Health
                     </Link>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
                 
                 {/* Subscribe Box */}
                 <div className="bg-gradient-to-br from-lavender/20 to-blue/20 p-6 rounded-xl">
