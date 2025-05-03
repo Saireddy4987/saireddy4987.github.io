@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,12 +62,25 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+        // Scholar's Summit custom colors
+        "blue": "#4A90E2",
+        "yellow": "#F5A623",
+        "coral": "#FF6F61",
+        "mint": "#A8E6CF",
+        "lavender": "#D4A5E2",
+        "softwhite": "#FDFDFD",
+        "lightgray": "#EAEAEA",
+        "darkgray": "#333333"
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			fontFamily: {
+				poppins: ['Poppins', 'sans-serif'],
+				opensans: ['Open Sans', 'sans-serif']
 			},
 			keyframes: {
 				'accordion-down': {
@@ -84,11 +98,51 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+        'fade-in': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(10px)'
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
+        },
+        'slide-in': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateX(-20px)'
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateX(0)'
+          }
+        },
+        'zoom-in': {
+          '0%': {
+            transform: 'scale(1)'
+          },
+          '100%': {
+            transform: 'scale(1.05)'
+          }
+        },
+        'bounce': {
+          '0%, 100%': {
+            transform: 'translateY(0)'
+          },
+          '50%': {
+            transform: 'translateY(-5px)'
+          }
+        }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in': 'fade-in 0.7s ease-out forwards',
+        'slide-in': 'slide-in 0.5s ease-out forwards',
+        'zoom-in': 'zoom-in 0.3s ease-out forwards',
+        'bounce': 'bounce 1s ease-in-out infinite'
 			}
 		}
 	},
