@@ -38,12 +38,12 @@ const Index = () => {
         const bg = element.querySelector('.parallax-bg');
         if (bg) {
           const scrollPosition = window.pageYOffset;
-          const parentOffset = element.offsetTop;
+          const parentOffset = (element as HTMLElement).offsetTop;
           const distance = scrollPosition - parentOffset;
           const speed = 0.5;
           
           if (distance > -window.innerHeight && distance < window.innerHeight) {
-            bg.style.transform = `translateY(${distance * speed}px)`;
+            (bg as HTMLElement).style.transform = `translateY(${distance * speed}px)`;
           }
         }
       });
